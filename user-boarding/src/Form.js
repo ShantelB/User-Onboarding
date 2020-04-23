@@ -7,7 +7,6 @@ const formSchema = yup.object().shape({
     name: yup.string().required("Name is a required field."), 
     email: yup
       .string()
-    //   .email("Must be a valid email address.")
       .required("Must include email address."),
     terms: yup.boolean().oneOf([true], "please agree to terms of use"),
     password: yup.string().required("Password is required"),
@@ -54,7 +53,7 @@ const checkChange = event => {
     
     .catch(err => {
         setError({
-            ...error, [event.target.name] : err.error[0]
+            ...error, [event.target.name] : err.errors[0], 
         })
     })
 }
@@ -66,7 +65,7 @@ const checkChange = event => {
             event.target.type === "checkbox" ? event.target.checked : event.target.value
         };
         setMemberName(newData);
-        // checkChange(event);
+        checkChange(event);
     };
 
 
@@ -95,38 +94,30 @@ const checkChange = event => {
       <form onSubmit={submitMember}>
 
           <label htmlFor="member">Name{error.name.length > 0 ? <p className="error">{error.name}</p> : null}</label>
-          <input id="member" type="text" name="name" onChange={makeChange} placeholder="Name" value= {memberName.name} required />
+          <input id="member" type="text" name="name" onChange={makeChange} placeholder="Name" value= {memberName.name} />
           
           <label htmlFor="email">Email{error.email.length > 0 ? <p className="error">{error.email}</p> : null}</label>
-          <input id="email" type="text" name="email" onChange={makeChange} placeholder="Email" value= {memberName.email} required/>
+          <input id="email" type="text" name="email" onChange={makeChange} placeholder="Email" value= {memberName.email} />
 
           <label htmlFor="password">Password{error.password.length > 0 ? <p className="error">{error.password}</p> : null}</label>
-          <input id="password" type="password" name="password" onChange={makeChange} placeholder="password" value= {memberName.password} required/>
+          <input id="password" type="password" name="password" onChange={makeChange} placeholder="password" value= {memberName.password} />
 
           <input type="checkbox" name="terms" checked={memberName.terms} onChange={makeChange} />
           <label htmlFor="terms" className="terms">Terms and Conditions</label>
 
           <pre>{JSON.stringify(post, null, 2)}</pre>
-         <button disabled={disable} type="submit">Submit</button>
+         <button disabled={disable} name="submit" type="submit">Submit</button>
       </form>
 
-      <Container className="card">
+      
           {props.members.map(member => (
               <div className="list" key={member.id}>
                 
-                <Card className="cards" >
-                  <CardBody >
-             
-                  <CardTitle><h2>Name: {member.name}</h2></CardTitle>
-                  <CardSubtitle><h3></h3></CardSubtitle>
-                  <CardSubtitle><h3>Email: {member.email}</h3></CardSubtitle>
-              
-                  </CardBody>
-                </Card>
+               
                 
           </div>
           ))}
-    </Container>
+    
 
       </div>
     );
